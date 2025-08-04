@@ -1,0 +1,2 @@
+# msc_uom_projects_assignments
+MscApplied Informatics Projects and Assignments
