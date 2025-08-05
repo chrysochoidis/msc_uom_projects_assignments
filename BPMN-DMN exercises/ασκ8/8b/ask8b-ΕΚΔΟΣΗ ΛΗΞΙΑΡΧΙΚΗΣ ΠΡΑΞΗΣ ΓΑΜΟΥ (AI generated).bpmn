@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="b46fab0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6">
+  <bpmn:process id="Process_CitizenCertificateRequest" name="ΔΙΑΔΙΚΑΣΙΑ ΑΙΤΗΣΗΣ ΠΙΣΤΟΠΟΙΗΤΙΚΟΥ ΠΟΛΙΤΗ" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="ΕΝΑΡΞΗ ΔΙΑΔΙΚΑΣΙΑΣ">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_PhysicalIdentification" name="ΦΥΣΙΚΗ ΤΑΥΤΟΠΟΙΗΣΗ ΠΟΛΙΤΗ">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_IdentificationCheck" name="ΕΠΙΤΥΧΗΣ ΤΑΥΤΟΠΟΙΗΣΗ;">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_ApplicationSubmission" name="ΑΙΤΗΣΗ ΣΤΟ ΚΕΠ">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_CitizenDataEntry" name="ΚΑΤΑΧΩΡΗΣΗ ΣΤΟΙΧΕΙΩΝ ΠΟΛΙΤΗ">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_PrintApplication" name="ΕΚΤΥΠΩΣΗ ΑΙΤΗΣΗΣ">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_SignApplication" name="ΥΠΟΓΡΑΦΗ ΑΙΤΗΣΗΣ">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_ScanApplication" name="ΣΑΡΩΣΗ ΑΙΤΗΣΗΣ">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_LocalSave" name="ΤΟΠΙΚΗ ΑΠΟΘΗΚΕΥΣΗ ΑΙΤΗΣΗΣ">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_SendToMunicipality" name="ΑΠΟΣΤΟΛΗ ΑΙΤΗΣΗΣ ΣΤΟΝ ΔΗΜΟ">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_20</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="Task_ReceiveApplication" name="ΠΑΡΑΛΑΒΗ ΑΙΤΗΣΗΣ ΑΠΟ ΤΟΝ ΔΗΜΟ">
+      <bpmn:incoming>Flow_21</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:serviceTask id="Task_SearchCitizenRegistry" name="ΑΝΑΖΗΤΗΣΗ ΠΟΛΙΤΗ ΣΤΟ ΜΗΤΡΩΟ ΠΟΛΙΤΩΝ">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_CitizenFound" name="ΒΡΕΘΗΚΕ Ο ΠΟΛΙΤΗΣ;">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+      <bpmn:outgoing>Flow_15</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_PrintCertificate" name="ΕΚΤΥΠΩΣΗ ΠΙΣΤΟΠΟΙΗΤΙΚΟΥ ΟΙΚ. ΚΑΤΑΣΤΑΣΗΣ">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+      <bpmn:outgoing>Flow_16</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_SupervisorCheck" name="ΕΛΕΓΧΟΣ ΚΑΙ ΥΠΟΓΡΑΦΗ ΑΠΟ ΠΡΟΪΣΤΑΜΕΝΟ">
+      <bpmn:incoming>Flow_16</bpmn:incoming>
+      <bpmn:outgoing>Flow_17</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_IssueCertificate" name="ΕΚΔΟΣΗ ΛΗΞΙΑΡΧΙΚΗΣ ΠΡΑΞΗΣ">
+      <bpmn:incoming>Flow_17</bpmn:incoming>
+      <bpmn:outgoing>Flow_18</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_SendCertificate" name="ΑΠΟΣΤΟΛΗ ΛΗΞΙΑΡΧΙΚΗΣ ΠΡΑΞΗΣ ΣΤΟΝ ΠΟΛΙΤΗ">
+      <bpmn:incoming>Flow_18</bpmn:incoming>
+      <bpmn:outgoing>Flow_19</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="EndEvent_Success" name="ΛΗΞΗ ΔΙΑΔΙΚΑΣΙΑΣ">
+      <bpmn:incoming>Flow_19</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_IdentificationFailed" name="ΑΠΟΤΥΧΙΑ ΤΑΥΤΟΠΟΙΗΣΗΣ">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_1" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_CitizenNotFound" name="ΠΟΛΙΤΗΣ ΔΕΝ ΒΡΕΘΗΚΕ">
+      <bpmn:incoming>Flow_15</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_2" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_PhysicalIdentification" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_PhysicalIdentification" targetRef="Gateway_IdentificationCheck" />
+    <bpmn:sequenceFlow id="Flow_3" name="ΝΑΙ" sourceRef="Gateway_IdentificationCheck" targetRef="Task_ApplicationSubmission" />
+    <bpmn:sequenceFlow id="Flow_4" name="ΟΧΙ" sourceRef="Gateway_IdentificationCheck" targetRef="EndEvent_IdentificationFailed" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_ApplicationSubmission" targetRef="Task_CitizenDataEntry" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_CitizenDataEntry" targetRef="Task_PrintApplication" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_PrintApplication" targetRef="Task_SignApplication" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_SignApplication" targetRef="Task_ScanApplication" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_ScanApplication" targetRef="Task_LocalSave" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_LocalSave" targetRef="Task_SendToMunicipality" />
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_ReceiveApplication" targetRef="Task_SearchCitizenRegistry" />
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_SearchCitizenRegistry" targetRef="Gateway_CitizenFound" />
+    <bpmn:sequenceFlow id="Flow_14" name="ΝΑΙ" sourceRef="Gateway_CitizenFound" targetRef="Task_PrintCertificate" />
+    <bpmn:sequenceFlow id="Flow_15" name="ΟΧΙ" sourceRef="Gateway_CitizenFound" targetRef="EndEvent_CitizenNotFound" />
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Task_PrintCertificate" targetRef="Task_SupervisorCheck" />
+    <bpmn:sequenceFlow id="Flow_17" sourceRef="Task_SupervisorCheck" targetRef="Task_IssueCertificate" />
+    <bpmn:sequenceFlow id="Flow_18" sourceRef="Task_IssueCertificate" targetRef="Task_SendCertificate" />
+    <bpmn:sequenceFlow id="Flow_19" sourceRef="Task_SendCertificate" targetRef="EndEvent_Success" />
+    <bpmn:dataObjectReference id="DataObjectReference_CitizenID" name="ΤΑΥΤΟΤΗΤΑ ΠΟΛΙΤΗ" dataObjectRef="DataObject_1" />
+    <bpmn:dataObject id="DataObject_1" />
+    <bpmn:intermediateThrowEvent id="Event_LinkThrow" name="A">
+      <bpmn:incoming>Flow_20</bpmn:incoming>
+      <bpmn:linkEventDefinition id="LinkEventDefinition_1" name="A" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_20" sourceRef="Task_SendToMunicipality" targetRef="Event_LinkThrow" />
+    <bpmn:intermediateCatchEvent id="Event_LinkCatch" name="A">
+      <bpmn:outgoing>Flow_21</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="LinkEventDefinition_2" name="A" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_21" sourceRef="Event_LinkCatch" targetRef="Task_ReceiveApplication" />
+    <bpmn:textAnnotation id="TextAnnotation_0mtfdow">
+      <bpmn:text>μέσω email</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1" sourceRef="Task_SendCertificate" targetRef="TextAnnotation_0mtfdow" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Process_CitizenCertificateRequest">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_CitizenCertificateRequest" bpmnElement="Process_CitizenCertificateRequest">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="167" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152" y="138" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PhysicalIdentification_di" bpmnElement="Task_PhysicalIdentification">
+        <dc:Bounds x="285" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_IdentificationCheck_di" bpmnElement="Gateway_IdentificationCheck" isMarkerVisible="true">
+        <dc:Bounds x="460" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="445" y="145" width="81" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ApplicationSubmission_di" bpmnElement="Task_ApplicationSubmission">
+        <dc:Bounds x="585" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CitizenDataEntry_di" bpmnElement="Task_CitizenDataEntry">
+        <dc:Bounds x="735" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrintApplication_di" bpmnElement="Task_PrintApplication">
+        <dc:Bounds x="885" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SignApplication_di" bpmnElement="Task_SignApplication">
+        <dc:Bounds x="1035" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ScanApplication_di" bpmnElement="Task_ScanApplication">
+        <dc:Bounds x="1185" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_LocalSave_di" bpmnElement="Task_LocalSave">
+        <dc:Bounds x="1335" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SendToMunicipality_di" bpmnElement="Task_SendToMunicipality">
+        <dc:Bounds x="1485" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReceiveApplication_di" bpmnElement="Task_ReceiveApplication">
+        <dc:Bounds x="285" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SearchCitizenRegistry_di" bpmnElement="Task_SearchCitizenRegistry">
+        <dc:Bounds x="435" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CitizenFound_di" bpmnElement="Gateway_CitizenFound" isMarkerVisible="true">
+        <dc:Bounds x="610" y="515" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="603" y="565" width="65" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrintCertificate_di" bpmnElement="Task_PrintCertificate">
+        <dc:Bounds x="735" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SupervisorCheck_di" bpmnElement="Task_SupervisorCheck">
+        <dc:Bounds x="885" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IssueCertificate_di" bpmnElement="Task_IssueCertificate">
+        <dc:Bounds x="1035" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SendCertificate_di" bpmnElement="Task_SendCertificate">
+        <dc:Bounds x="1185" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Success_di" bpmnElement="EndEvent_Success">
+        <dc:Bounds x="1367" y="522" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1352" y="558" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_IdentificationFailed_di" bpmnElement="EndEvent_IdentificationFailed">
+        <dc:Bounds x="617" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="593" y="278" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_CitizenNotFound_di" bpmnElement="EndEvent_CitizenNotFound">
+        <dc:Bounds x="767" y="662" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="748" y="698" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_CitizenID_di" bpmnElement="DataObjectReference_CitizenID">
+        <dc:Bounds x="167" y="235" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="285" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_LinkThrow_di" bpmnElement="Event_LinkThrow">
+        <dc:Bounds x="1667" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1681" y="138" width="8" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_LinkCatch_di" bpmnElement="Event_LinkCatch">
+        <dc:Bounds x="167" y="522" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="181" y="558" width="8" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="203" y="120" />
+        <di:waypoint x="285" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="385" y="120" />
+        <di:waypoint x="460" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="585" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="538" y="95" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="485" y="145" />
+        <di:waypoint x="485" y="260" />
+        <di:waypoint x="617" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="491" y="193" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="685" y="120" />
+        <di:waypoint x="735" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="835" y="120" />
+        <di:waypoint x="885" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="985" y="120" />
+        <di:waypoint x="1035" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="1135" y="120" />
+        <di:waypoint x="1185" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="1285" y="120" />
+        <di:waypoint x="1335" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="1435" y="120" />
+        <di:waypoint x="1485" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_20_di" bpmnElement="Flow_20">
+        <di:waypoint x="1585" y="120" />
+        <di:waypoint x="1667" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_21_di" bpmnElement="Flow_21">
+        <di:waypoint x="203" y="540" />
+        <di:waypoint x="285" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12">
+        <di:waypoint x="385" y="540" />
+        <di:waypoint x="435" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13">
+        <di:waypoint x="535" y="540" />
+        <di:waypoint x="610" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14">
+        <di:waypoint x="660" y="540" />
+        <di:waypoint x="735" y="540" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="688" y="515" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15_di" bpmnElement="Flow_15">
+        <di:waypoint x="635" y="565" />
+        <di:waypoint x="635" y="680" />
+        <di:waypoint x="767" y="680" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="613" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16_di" bpmnElement="Flow_16">
+        <di:waypoint x="835" y="540" />
+        <di:waypoint x="885" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17_di" bpmnElement="Flow_17">
+        <di:waypoint x="985" y="540" />
+        <di:waypoint x="1035" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18_di" bpmnElement="Flow_18">
+        <di:waypoint x="1135" y="540" />
+        <di:waypoint x="1185" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19_di" bpmnElement="Flow_19">
+        <di:waypoint x="1285" y="540" />
+        <di:waypoint x="1367" y="540" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,119 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<html>
+	<head>
+		<link th:href="@{/create-view-update.css}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="header">
+			<button id ="logoutBtn" name='logoutButton' onclick="logout();"> Αποσύνδεση </button>
+		</div>
+	</br>
+		<h1> Επιλεγμένο Αυτοκίνητο</h1>
+		<div class="main">
+			<div class="form">
+				<table>
+					<tr>
+						<td> Μάρκα: </td>
+						<td> <input type='text' id='brand'> </td>
+					</tr>
+					<tr>
+						<td> Μοντέλο: </td>
+						<td> <input type='text' id='model'> </td>
+					</tr>
+					<tr>
+						<td> Κινητήρας: </td>
+						<td> <input type='number' id='engine'> </td>
+					</tr>
+					<tr>
+						<td> Καύσιμο: </td>
+						<td> <input type='text' id='fuel'> </td>
+					</tr>
+					<tr>
+						<td> Θέσεις: </td>
+						<td> <input type='number' id='seats'> </td>
+					</tr>
+					<tr>
+						<td> Πληροφορίες: </td>
+						<td> <input type='text' id='info'> </td>
+					</tr>
+					<tr>
+						<td> Τιμή: </td>
+						<td> <input type='number' id='price'> </td>
+					</tr>
+					<tr>
+						<td> Ποσότητα : </td>
+						<td> <input type='number' id='amount'> </td>
+					</tr>
+				</table>
+				<p id="carId" style="display:none"></p>
+			</div>
+			<div class="btnContainer">
+				<button class ="btn" onclick="updateCar();">Αποθήκευση</button>
+				<button class ="btn" onclick="back();">Πίσω</button>
+			</div>
+		</div>
+		<div class="footer"></div>
+		<script>
+			const token = new URLSearchParams(window.location.search).get('token');
+
+			document.addEventListener('DOMContentLoaded', function(){
+				var car = JSON.parse(localStorage.getItem('selectedCar'));
+				if(car){
+					document.getElementById('carId').innerHTML = car.id;
+					document.getElementById('brand').value = car.brand;
+					document.getElementById('model').value = car.model;
+					document.getElementById('fuel').value = car.fuel;
+					document.getElementById('engine').value = car.engine;
+					document.getElementById('seats').value = car.seats;
+					document.getElementById('info').value = car.info;
+					document.getElementById('price').value = car.price;
+					document.getElementById('amount').value = car.amount;
+				}
+			});
+		
+			function updateCar() {
+				var settings = {
+					"url": "/dealership/updateCar?token=" + token,
+					"method": "POST",
+					"timeout": 0,
+					"headers": {
+					"Content-Type": "application/json"
+				  },
+				  "data": JSON.stringify({
+					"id" : document.getElementById("carId").innerHTML,
+					"brand" : document.getElementById("brand").value,
+					"model" : document.getElementById("model").value,
+					"fuel" : document.getElementById("fuel").value, 
+					"engine" : document.getElementById("engine").value,
+					"seats" : document.getElementById("seats").value,
+					"info" : document.getElementById("info").value, 
+					"price" : document.getElementById("price").value,
+					"amount" : document.getElementById("amount").value
+				  }),
+				};
+					
+				
+				$.ajax(settings).done(function (response) {
+					sessionStorage.setItem("success", "Τα στοιχεία ανανεώθηκαν");
+					window.location.href = '/ui/dealershipHomePage?token=' + token;
+				});
+			};
+
+			function logout() {
+			var settings = {
+				"url": "/logout?token=" + token,
+				"method": "GET",
+				"timeout": 0
+			};
+			$.ajax(settings).done(function (response) {
+				window.location.href = '/ui/login';
+			});
+		}
+
+			function back(){
+				window.location.href = '/ui/dealershipHomePage?token=' + token;
+			}
+		</script>	
+	</body>
+</html>

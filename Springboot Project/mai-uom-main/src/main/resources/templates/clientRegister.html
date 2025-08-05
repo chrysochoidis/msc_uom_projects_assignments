@@ -1,0 +1,117 @@
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<html>
+<head>
+<link th:href="@{/login-reg.css}" rel="stylesheet">
+</head>
+<body>
+
+	<div class="header"></div>
+	<div class="main">
+		</br>
+		<h2>Εγγραφή Πελάτη</h2>
+		</br>
+		<div class="mainContainer">
+			<div class="form">
+				<table>
+					<tr>
+						<td>Όνομα:</td>
+						<td><input type='text' id='fname'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=firstNameError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>Επώνυμο:</td>
+						<td><input type='text' id='lname'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=lastNameError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>ΑΦΜ:</td>
+						<td><input type='number' id='afm'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=afmError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>E-mail:</td>
+						<td><input type='text' id='email'></td>
+
+					</tr>
+					<tr>
+						<td colspan="2" id=emailError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>Password:</td>
+						<td><input type='password' id='password'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=passwordError style="color: red;"></td>
+					</tr>
+				</table>
+				</br>
+				<button name='register' onclick="register();">Εγγραφή</button>
+				</br>
+				</br>
+				<div>
+					<p>
+						Είστε εγγεγραμμένος;<a href="/ui/login">Σύνδεση</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer"></div>
+
+	<script>
+			function register(){
+				
+				 const errorFields = ["firstNameError", "lastNameError", "afmError", "emailError", "passwordError"];
+				    errorFields.forEach(field => {
+				        const errorElement = document.getElementById(field);
+				        if (errorElement) {
+				            errorElement.textContent = "";
+				        }
+				    });
+				    
+				var settings = {
+					"url": "/clientRegister",
+					"method": "POST",
+					"timeout": 0,
+					"headers": {
+					"Content-Type": "application/json"},
+					"data": JSON.stringify({
+						"firstName": document.getElementById("fname").value,
+						"lastName": document.getElementById("lname").value,
+						"afm": document.getElementById("afm").value,
+						"password": document.getElementById("password").value,
+						"email": document.getElementById("email").value,
+				  }),
+				};
+				$.ajax(settings).done(function (response) {
+					
+					sessionStorage.setItem("registrationSuccess", response);
+					window.location.href = "/ui/login";
+				})
+				.fail(function (xhr, status, error) {
+					if(xhr.status === 409){
+						alert(xhr.responseText);
+						
+					} else{
+					const errors = xhr.responseJSON;
+					 for (const [field, message] of Object.entries(errors)) {
+                         const errorElement = document.getElementById(`${field}Error`);
+                         if (errorElement) {
+                             errorElement.textContent = message;
+                         }
+                     }
+				}
+				});
+			}
+		</script>
+
+</body>
+</html>

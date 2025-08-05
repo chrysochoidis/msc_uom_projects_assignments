@@ -1,0 +1,162 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<html>
+	<head>
+		<link th:href="@{/reserve.css}" rel="stylesheet">
+	</head>
+	<body>
+
+		<div class="header">
+			<button id ="logoutBtn" name='logoutButton' onclick="logout();"> Αποσύνδεση </button>
+		</div>
+	</br>
+	<h1> Επιλεγμένο Αυτοκίνητο</h1>
+	<div class="main">
+		<div class="form">
+			<table>
+				<tr>
+					<td> Μάρκα: </td>
+					<td id ="brand"></td>
+				</tr>
+				<tr>
+					<td> Μοντέλο: </td>
+					<td id="model"> </td>
+				</tr>
+				<tr>
+					<td> Κινητήρας: </td>
+					<td id="engine"> </td>
+				</tr>
+				<tr>
+					<td> Καύσιμο: </td>
+					<td id="fuel"> </td>
+				</tr>
+				<tr>
+					<td> Θέσεις: </td>
+					<td id="seats"> </td>
+				</tr>
+				<tr>
+					<td> Πληροφορίες: </td>
+					<td id="info"> </td>
+				</tr>
+				<tr>
+					<td> Τιμή: </td>
+					<td id="price"> </td>
+				</tr>
+				<tr>
+					<td> Ποσότητα : </td>
+					<td id="amount"> </td>
+				</tr>
+			</table>
+			<p id="carId" style="display:none"></p>
+		</div>
+		<div class="searchSlots">
+		Εισάγετε ημερομηνία για να δείτε διαθεσιμότητα: <input type='date' id='reserveDay'>
+		<button class="btn" name='slotSearchButton' onclick="showAvailableSlots();"> Αναζήτηση </button>
+		<button class ="btn" onclick="back();">Πίσω</button>
+		<table border='1' id='slotsTable'></table>
+		</div>
+	</div>
+	
+
+	<div class="footer"></div>
+		<script>
+			const token = new URLSearchParams(window.location.search).get('token');
+			
+			document.addEventListener('DOMContentLoaded', function(){
+				var car = JSON.parse(localStorage.getItem('selectedCar'));
+				if(car){
+					document.getElementById('carId').innerHTML = car.id;
+					document.getElementById('brand').innerHTML = car.brand;
+					document.getElementById('model').innerHTML = car.model;
+					document.getElementById('fuel').innerHTML = car.fuel;
+					document.getElementById('engine').innerHTML = car.engine;
+					document.getElementById('seats').innerHTML = car.seats;
+					document.getElementById('info').innerHTML = car.info;
+					document.getElementById('price').innerHTML = car.price;
+					document.getElementById('amount').innerHTML = car.amount;
+				}
+			})
+			
+			function showAvailableSlots() {
+				var settings = {
+					"url": "/client/availableSlots?token=" + token 
+							+ "&id=" + document.getElementById('carId').innerHTML 
+							+ "&date=" + document.getElementById('reserveDay').value,
+					"method": "GET",
+					"timeout": 0
+				};
+				$.ajax(settings).done(function (response) {
+					updateSlotsTable(response);
+				});
+			}
+
+			function back(){
+				window.location.href = '/ui/clientHomePage?token=' + token;
+			}
+
+			function logout() {
+			var settings = {
+				"url": "/logout?token=" + token,
+				"method": "GET",
+				"timeout": 0
+			};
+			$.ajax(settings).done(function (response) {
+				window.location.href = '/ui/login';
+			});
+		}
+			
+			function back(){
+				window.location.href = '/ui/clientHomePage?token=' + token;
+			}
+			
+			
+			function updateSlotsTable(result) {
+				var startDate = document.getElementById('reserveDay').value + 'T09:00:00';
+				var table = document.getElementById("slotsTable");
+				
+				table.innerHTML = '';			
+				
+				for(var k in result) {
+					var num = result[k];
+					var row = table.insertRow(-1);
+					var cell = row.insertCell(0);
+					
+					slotStart = new Date(startDate);
+					slotStart.setMinutes(slotStart.getMinutes() + (num * 30));
+					slotEnd = new Date(slotStart);
+					slotEnd.setMinutes(slotEnd.getMinutes() + 30);
+					cell.innerHTML = slotStart.getHours().toString().padStart(2, '0') + 
+									':' + 
+									slotStart.getMinutes().toString().padStart(2, '0') + 
+									' - ' + 
+									slotEnd.getHours().toString().padStart(2, '0') + 
+									':' + 
+									slotEnd.getMinutes().toString().padStart(2, '0');
+
+					row.onclick = (function(slotId) {
+						return function(){
+							var settings = {
+								"url": "/client/reserveCar?token=" + token,
+								"method": "POST",
+								"timeout": 0,
+								"headers": {
+									"Content-Type": "application/json"},
+								"data": JSON.stringify({
+									"carId": document.getElementById('carId').innerHTML,
+									"date": document.getElementById('reserveDay').value,
+									"timeslot": slotId
+							  }),
+							};
+							$.ajax(settings).done(function (response) {
+								sessionStorage.setItem("success", "Το ραντεβού Test Drive κατοχυρώθηκε");
+								window.location.href = '/ui/clientHomePage?token=' + token;
+							});
+						};
+					})(result[k]);
+				}
+			} 
+
+			
+		</script>	
+	</body>
+</html>

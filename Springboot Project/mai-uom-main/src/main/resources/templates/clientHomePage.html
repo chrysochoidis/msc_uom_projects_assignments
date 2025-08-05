@@ -1,0 +1,178 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<html>
+	<head>
+		<link th:href="@{/clientHome.css}" rel="stylesheet">
+		<!--<link rel="stylesheet" href="C:\Users\Tasos\eclipse-workspace\mai-uom\src\main\resources\static\clientHome.css">-->
+	</head>
+	<body>
+		<div class="popup" id="successPopup"></div>
+		<div class="header">
+			<button id ="logoutBtn" name='logoutButton' onclick="logout();"> Αποσύνδεση </button>
+		</div>
+			<div class="main">
+				<div class="searchContainer">
+					<table>
+						<tr>
+							<td> Μάρκα: </td>
+							<td> <input type='text' id='brand'> </td>
+						</tr>
+						<tr>
+							<td> Μοντέλο: </td>
+							<td> <input type='text' id='model'> </td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td> Τιμή Από: </td>
+							<td> <input type='number' id='fromPrice'> </td>
+						</tr>
+						<tr>
+							<td> Τιμή Έως: </td>
+							<td> <input type='number' id='toPrice'> </td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td> Κινητήρας Από: </td>
+							<td> <input type='number' id='fromEngine'> </td>
+						</tr>
+						<tr>
+							<td> Κινητήρας Έως: </td>
+							<td> <input type='number' id='toEngine'> </td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td> Καύσιμο: </td>
+							<td> <input type='text' id='fuel'> </td>
+						</tr>
+						<tr>
+							<td> Θέσεις: </td>
+							<td> <input type='number' id='seats'> </td>
+						</tr>
+					</table>
+				</div>
+			<div>
+				<button name='searchButton' id="searchBtn" onclick="searchCar();"> Αναζήτηση </button>
+			</div>
+		</br>
+						<table border='1' id='resultsTable'>
+							<tr id=headerRow>
+								<th width='150'> Μάρκα </th>
+								<th width='150'> Μοντέλο </th>
+								<th width='150'> Καύσιμο </th>
+								<th width='150'> Κινητήρας </th>
+								<th width='150'> Θέσεις </th>
+								<th width='150'> Πληροφορίες </th>
+								<th width='150'> Τιμή </th>
+								<th width='150'> Ποσότητα </th>
+							</tr>
+						</table>
+
+			</div>
+		<div class="footer"></div>
+
+	</body>
+
+	<script>
+		const token = new URLSearchParams(window.location.search).get('token');
+	
+		const successMessage = sessionStorage.getItem("success");
+    	if (successMessage) {
+        const popup = document.getElementById("successPopup");
+        popup.textContent = successMessage;
+        popup.style.display = "block"; 
+
+        setTimeout(() => {
+            popup.style.display = "none"; 
+            sessionStorage.removeItem("success");
+        }, 2000);
+    }
+    	
+		function showAll() {
+			var settings = {
+				"url": "/client/getCars?token=" + token,
+				"method": "GET",
+				"timeout": 0
+			};
+			$.ajax(settings).done(function (response) {
+				updateTable(response);
+			});
+		}
+		
+		function logout() {
+			var settings = {
+				"url": "/logout?token=" + token,
+				"method": "GET",
+				"timeout": 0
+			};
+			$.ajax(settings).done(function (response) {
+				window.location.href = '/ui/login';
+			});
+		}
+
+		function searchCar() {
+			var settings = {
+				"url": "/client/search?token=" + token,
+				"method": "POST",
+				"timeout": 0,
+				"headers": {
+					"Content-Type": "application/json"},
+				"data": JSON.stringify({
+					"brand": document.getElementById("brand").value,
+					"model": document.getElementById("model").value,
+					"fuel": document.getElementById("fuel").value,
+					"seats": document.getElementById("seats").value,
+					"fromPrice": document.getElementById("fromPrice").value,
+					"toPrice": document.getElementById("toPrice").value,
+					"fromEngine": document.getElementById("fromEngine").value,
+					"toEngine": document.getElementById("toEngine").value
+			  }, (key, value) => {
+				  if (value !== '') return value
+			  }),
+			};
+			$.ajax(settings).done(function (response) {
+				updateTable(response);
+			});
+		}
+
+		function updateTable(result) {
+			var table = document.getElementById("resultsTable");
+			
+			var rowCount = table.rows.length;
+			for (var i = rowCount - 1; i > 0; i--) {
+				table.deleteRow(i);
+			}				
+			
+			for(var k in result) {
+				var car = result[k];
+				var row = table.insertRow(-1);
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				var cell3 = row.insertCell(2);
+				var cell4 = row.insertCell(3);
+				var cell5= row.insertCell(4);
+				var cell6= row.insertCell(5);
+				var cell7= row.insertCell(6)
+				var cell8= row.insertCell(7);
+
+				cell1.innerHTML = car.brand;
+				cell2.innerHTML = car.model;
+				cell3.innerHTML = car.fuel;
+				cell4.innerHTML = car.engine;
+				cell5.innerHTML = car.seats;
+				cell6.innerHTML = car.info;
+				cell7.innerHTML = car.price;
+				cell8.innerHTML = car.amount;
+
+				row.onclick = (function(car) {
+					return function(){
+						localStorage.setItem('selectedCar', JSON.stringify(car));
+						window.location.href = '/ui/viewCar?token=' + token;
+					};
+				})(car);
+			}
+		} 
+	</script>
+</html>

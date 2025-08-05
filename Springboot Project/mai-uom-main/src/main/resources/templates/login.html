@@ -1,0 +1,83 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<html>
+	<head>
+		<link th:href="@{/login-reg.css}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="popup" id="successPopup"></div>
+		<div class="header"></div>
+		<div class="main">
+			</br></br>
+			<div class="mainContainer">
+				<div class="form">
+					<table>
+						<tr>
+							<td> ΑΦΜ: </td>
+							<td> <input type='text' id='afm'> </td>
+						</tr>
+						<tr>
+							<td> Password: </td>
+							<td> <input type='password' id='password'> </td>
+						</tr>
+					</table>
+					</br>
+					<button name='login' onclick="login();">Σύνδεση</button>
+					</br></br>
+					<div>
+						<p><a href="/ui/clientRegister">Εγγραφή για πελάτη</a></p>
+						<p><a href="/ui/dealershipRegister">Εγγραφή για αντιπροσωπεία</a></p>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+	<div class="footer"></div>
+	
+	<script>
+			const successMessage = sessionStorage.getItem("registrationSuccess");
+	    	if (successMessage) {
+		        const popup = document.getElementById("successPopup");
+		        popup.textContent = successMessage;
+		        popup.style.display = "block"; 
+		
+		        setTimeout(() => {
+		            popup.style.display = "none"; 
+		            sessionStorage.removeItem("registrationSuccess");
+		        }, 2000);
+   			}
+	    	
+			function login() {				
+				var settings = {
+					"url": "/login",
+					"method": "POST",
+					"timeout": 0,
+					"headers": {
+						"Content-Type": "application/json"
+					  },
+					"data": JSON.stringify({
+					"afm": document.getElementById("afm").value,
+					"password": document.getElementById("password").value
+				  }),
+				};
+				$.ajax(settings).done(function (response) {
+					console.log(response);
+					if(response.role === 1){
+						window.location.href = "/ui/clientHomePage?token=" + response.token
+					}
+					else if(response.role === 2){
+						window.location.href = "/ui/dealershipHomePage?token=" + response.token
+					}
+					else{
+						alert("Δώσατε λάθος διαπιστευτήρια. Προσπαθήστε ξανά");
+					} 
+				})
+				.fail(function (xhr, status, error) {					
+					alert(xhr.responseText); 
+				});
+			}
+			
+			
+		</script>	
+	</body>
+</html>

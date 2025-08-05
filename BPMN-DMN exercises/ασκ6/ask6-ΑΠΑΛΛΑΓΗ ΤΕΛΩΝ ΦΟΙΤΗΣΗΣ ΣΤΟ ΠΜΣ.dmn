@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_003fqmj" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Web Modeler" exporterVersion="ef3429c" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <decision id="Decision_0ovttd8" name="ΤΗΡΗΣΗ ΑΚΑΔΗΜΑΪΚΩΝ ΠΡΟΫΠΟΘΕΣΕΩΝ">
+    <informationRequirement id="InformationRequirement_15luxvb">
+      <requiredInput href="#InputData_1b17kcc" />
+    </informationRequirement>
+    <authorityRequirement id="AuthorityRequirement_0solxm4">
+      <requiredAuthority href="#KnowledgeSource_0uw9lar" />
+    </authorityRequirement>
+    <decisionTable id="DecisionTable_0y99z01">
+      <input id="Input_1" label="ΒΑΘΜΟΣ ΠΡΩΤΟΥ ΠΤΥΧΙΟΥ">
+        <inputExpression id="InputExpression_1" typeRef="number">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="ΠΛΗΡΟΤΗΤΑ ΑΚΑΔΗΜΑΪΚΩΝ ΠΡΟΫΠΟΘΕΣΕΩΝ" typeRef="string" />
+      <rule id="DecisionRule_0751yo1">
+        <inputEntry id="UnaryTests_1f14cxa">
+          <text>&gt;= 7.5</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1o0i9qo">
+          <text>"ΠΛΗΡΟΙ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_118fcp1">
+        <inputEntry id="UnaryTests_00eblcn">
+          <text>&lt; 7.5</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1jp34zw">
+          <text>"ΔΕΝ ΠΛΗΡΟΙ"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData id="InputData_1b17kcc" name="ΒΑΘΜΟΣ ΠΡΩΤΟΥ ΠΤΥΧΙΟΥ" />
+  <knowledgeSource id="KnowledgeSource_0uw9lar" name="ΝΟΜΟΘΕΣΙΑ" />
+  <knowledgeSource id="KnowledgeSource_0q6qut6" name="ΝΟΜΟΘΕΣΙΑ" />
+  <inputData id="InputData_0l4s6go" name="ΗΛΙΚΙΑ" />
+  <inputData id="InputData_07t66nj" name="ΟΙΚΟΓΕΝΕΙΑΚΗ ΚΑΤΑΣΤΑΣΗ" />
+  <inputData id="InputData_1s71tyx" name="ΜΟ ΕΙΣΟΔΗΜΑΤΟΣ 2 ΤΕΛΕΥΤΑΙΩΝ ΕΤΩΝ" />
+  <decision id="Decision_01fiart" name="ΔΙΚΑΙΩΜΑ ΑΠΑΛΛΑΓΗΣ ΤΕΛΩΝ ΦΟΙΤΗΣΗΣ">
+    <informationRequirement id="InformationRequirement_0lce4yg">
+      <requiredDecision href="#Decision_0ovttd8" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_00xjr4q">
+      <requiredInput href="#InputData_0l4s6go" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1yge5l4">
+      <requiredInput href="#InputData_07t66nj" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_06splga">
+      <requiredInput href="#InputData_1s71tyx" />
+    </informationRequirement>
+    <authorityRequirement id="AuthorityRequirement_01t2fe4">
+      <requiredAuthority href="#KnowledgeSource_0q6qut6" />
+    </authorityRequirement>
+    <decisionTable id="DecisionTable_1wlbz9g">
+      <input id="InputClause_1ypn6il" label="ΤΗΡΗΣΗ ΑΚΑΔΗΜΑΪΚΩΝ ΠΡΟΫΠΟΘΕΣΕΩΝ">
+        <inputExpression id="LiteralExpression_0z9yvkg" typeRef="boolean">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1d7ybnz" label="ΟΙΚΟΓΕΝΕΙΑΚΗ ΚΑΤΑΣΤΑΣΗ">
+        <inputExpression id="LiteralExpression_0q4ndja" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1tss84k" label="ΗΛΙΚΙΑ">
+        <inputExpression id="LiteralExpression_0435r7c" typeRef="number" />
+      </input>
+      <input id="InputClause_0gp8xnv" label="ΜΟ ΕΙΣΟΔΗΜΑΤΟΣ ΤΕΛΕΥΤΑΙΩΝ 2 ΕΤΩΝ">
+        <inputExpression id="LiteralExpression_16wevn7" typeRef="number">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1bft6v9" label="ΔΙΚΑΙΩΜΑ ΑΠΑΛΛΑΓΗΣ ΤΕΛΩΝ ΦΟΙΤΗΣΗΣ" typeRef="string" />
+      <rule id="DecisionRule_0gvr5oo">
+        <inputEntry id="UnaryTests_1h3ekrh">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ohif2c">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02g1h6h">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0rapvmd">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0rxrlmy">
+          <text>"ΜΗ ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0v28dar">
+        <description>υπολογίζεται ΜΟ εισοδημάτων του αιτούντους και του/της συζύγου</description>
+        <inputEntry id="UnaryTests_07jl7an">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17n6b8e">
+          <text>"ΕΓΓΑΜΟΣ"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0y63m0o">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0wo9149">
+          <text>&gt;=10050</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0yvwc3p">
+          <text>"ΜΗ ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ocmra1">
+        <description>υπολογίζεται ΜΟ εισοδημάτωντου αιτούντους και του/της συζύγου</description>
+        <inputEntry id="UnaryTests_1c7ofos">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1j1iwvo">
+          <text>"ΕΓΓΑΜΟΣ"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0u8q6y1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fi6n4c">
+          <text>&lt;10050</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_112noev">
+          <text>"ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1k0syxu">
+        <description>υπολογίζεται ΜΟ εισοδημάτων του αιτούντος</description>
+        <inputEntry id="UnaryTests_0ypngwa">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jmk4l2">
+          <text>"ΑΓΑΜΟΣ"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1q5qhre">
+          <text>&gt;=26</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ne451l">
+          <text>&gt;=10050</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_11uo156">
+          <text>"ΜΗ ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_06j2qrr">
+        <description>υπολογίζεται ΜΟ εισοδημάτων του αιτούντος</description>
+        <inputEntry id="UnaryTests_1ilxy6t">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1j3r66p">
+          <text>"ΑΓΑΜΟΣ"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fkqvzx">
+          <text>&gt;=26</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0y5zsp5">
+          <text>&lt;10050</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ltn7lp">
+          <text>"ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1tzwdzd">
+        <description>υπολογίζεται ΜΟ εισοδημάτων του συνόλου των μελών της οικογενείας</description>
+        <inputEntry id="UnaryTests_0ojq2fc">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0q43v7v">
+          <text>"ΑΓΑΜΟΣ"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00wlpa4">
+          <text>&lt;26</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07v1ir9">
+          <text>&gt;= 0.7 * 7035</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1t7ayd3">
+          <text>"ΜΗ ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0fyjbgn">
+        <description>υπολογίζεται ΜΟ εισοδημάτων του συνόλου των μελών της οικογενείας</description>
+        <inputEntry id="UnaryTests_1h4gm1l">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jqms71">
+          <text>"ΑΓΑΜΟΣ"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ren6o2">
+          <text>&lt;26</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_13i60qm">
+          <text>&lt; 0.7 * 7035</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_00nwqht">
+          <text>"ΔΙΚΑΙΟΥΧΟΣ"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <textAnnotation id="TextAnnotation_1e9o8ov">
+    <text>Νόμος 4957/2022 (ΦΕΚ Α'141/21.07.2022)</text>
+  </textAnnotation>
+  <association id="Association_046dstf">
+    <sourceRef href="#TextAnnotation_1e9o8ov" />
+    <targetRef href="#KnowledgeSource_0uw9lar" />
+  </association>
+  <textAnnotation id="TextAnnotation_081k9z9">
+    <text>Νόμος 4957/2022 (ΦΕΚ Α'141/21.07.2022)</text>
+  </textAnnotation>
+  <association id="Association_1xg84qk">
+    <sourceRef href="#TextAnnotation_081k9z9" />
+    <targetRef href="#KnowledgeSource_0q6qut6" />
+  </association>
+  <textAnnotation id="TextAnnotation_10upudr">
+    <text>να είναι πάνω από 7,5</text>
+  </textAnnotation>
+  <association id="Association_0j7afo6">
+    <sourceRef href="#TextAnnotation_10upudr" />
+    <targetRef href="#InputData_1b17kcc" />
+  </association>
+  <textAnnotation id="TextAnnotation_00krs0u">
+    <text>σύμφωνα με το Εθνικό Διάμεσο Διαθέσιμο Ισοδύναμο Εισόδημα που για το ακαδημαϊκό έτος ανέρχεται στα 10.050 € και το 70% του είναι 7.035€. Ο ΜΟ εισοδημάτων διαμορφώνεται βάσει της οικογενειακής κατάστασης του αιτούντος</text>
+  </textAnnotation>
+  <association id="Association_1lx446f">
+    <sourceRef href="#TextAnnotation_00krs0u" />
+    <targetRef href="#InputData_1s71tyx" />
+  </association>
+  <textAnnotation id="TextAnnotation_0oq43u9">
+    <text>ΦΕΚ_2515/Β/26-4-2024</text>
+  </textAnnotation>
+  <association id="Association_1dz92fc">
+    <sourceRef href="#TextAnnotation_0oq43u9" />
+    <targetRef href="#KnowledgeSource_0q6qut6" />
+  </association>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="Decision_0ovttd8">
+        <dc:Bounds height="80" width="180" x="700" y="490" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0zjmkn9" dmnElementRef="InputData_1b17kcc">
+        <dc:Bounds height="45" width="125" x="727" y="637" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0i0uma4" dmnElementRef="KnowledgeSource_0uw9lar">
+        <dc:Bounds height="63" width="100" x="430" y="488" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_16r4v5d" dmnElementRef="AuthorityRequirement_0solxm4">
+        <di:waypoint x="530" y="520" />
+        <di:waypoint x="700" y="520" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1j5yb7d" dmnElementRef="KnowledgeSource_0q6qut6">
+        <dc:Bounds height="63" width="100" x="280" y="198" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0kf3w5s" dmnElementRef="InformationRequirement_15luxvb">
+        <di:waypoint x="790" y="637" />
+        <di:waypoint x="790" y="590" />
+        <di:waypoint x="790" y="570" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0lwjxx3" dmnElementRef="TextAnnotation_1e9o8ov">
+        <dc:Bounds height="40" width="140" x="290" y="430" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_01ssz2d" dmnElementRef="Association_046dstf">
+        <di:waypoint x="340" y="470" />
+        <di:waypoint x="430" y="494" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_0wagl0q" dmnElementRef="InformationRequirement_0lce4yg">
+        <di:waypoint x="790" y="490" />
+        <di:waypoint x="748" y="290" />
+        <di:waypoint x="748" y="270" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_19301ez" dmnElementRef="InputData_0l4s6go">
+        <dc:Bounds height="45" width="125" x="417" y="328" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1x8jg41" dmnElementRef="InformationRequirement_00xjr4q">
+        <di:waypoint x="480" y="328" />
+        <di:waypoint x="676" y="290" />
+        <di:waypoint x="676" y="270" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0vxu52f" dmnElementRef="InputData_07t66nj">
+        <dc:Bounds height="45" width="125" x="587" y="347" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_084m973" dmnElementRef="InformationRequirement_1yge5l4">
+        <di:waypoint x="650" y="347" />
+        <di:waypoint x="712" y="290" />
+        <di:waypoint x="712" y="270" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_040vs6u" dmnElementRef="InputData_1s71tyx">
+        <dc:Bounds height="45" width="125" x="927" y="317" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_14vthp5" dmnElementRef="InformationRequirement_06splga">
+        <di:waypoint x="990" y="317" />
+        <di:waypoint x="784" y="290" />
+        <di:waypoint x="784" y="270" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1wewvdl" dmnElementRef="Decision_01fiart">
+        <dc:Bounds height="80" width="180" x="640" y="190" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_07c5rdf" dmnElementRef="TextAnnotation_081k9z9">
+        <dc:Bounds height="40" width="160" x="140" y="140" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0je9ac8" dmnElementRef="Association_1xg84qk">
+        <di:waypoint x="190" y="180" />
+        <di:waypoint x="280" y="205" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0vy93vg" dmnElementRef="TextAnnotation_10upudr">
+        <dc:Bounds height="40" width="100" x="740" y="720" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0cq9k4z" dmnElementRef="Association_0j7afo6">
+        <di:waypoint x="790" y="720" />
+        <di:waypoint x="790" y="682" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_0h462kk" dmnElementRef="AuthorityRequirement_01t2fe4">
+        <di:waypoint x="380" y="230" />
+        <di:waypoint x="640" y="230" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_18tuh0d" dmnElementRef="TextAnnotation_00krs0u">
+        <dc:Bounds height="125" width="198" x="1011" y="395" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0akzdkj" dmnElementRef="Association_1lx446f">
+        <di:waypoint x="1031" y="395" />
+        <di:waypoint x="1006" y="362" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1vpfdhd" dmnElementRef="TextAnnotation_0oq43u9">
+        <dc:Bounds height="31" width="150" x="205" y="84" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1t8w841" dmnElementRef="Association_1dz92fc">
+        <di:waypoint x="264" y="115" />
+        <di:waypoint x="312" y="198" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

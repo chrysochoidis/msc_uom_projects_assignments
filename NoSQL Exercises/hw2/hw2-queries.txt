@@ -1,0 +1,92 @@
+//1
+db.movies.countDocuments()
+
+//2 - using year instead of release it showed years like 2014e, 2007e2008 etc
+db.movies.find(
+	{},
+	{title:1, released:1, directors:1, genres:1, _id:0})
+	.sort({released:-1, title:1})
+	.limit(20)
+
+//3
+db.movies.find(
+	{year:{$gt:1970}, rated :"NOT RATED"},
+ 	{title:1, year:1}
+)
+
+
+//4
+db.movies.find(
+	{genres:{$in:['Comedy', 'Romance']}}
+)
+
+//5
+db.movies.find(
+	{cast:{$all: ['Tom Hanks', 'Meg Ryan']}}
+)
+
+//6
+db.movies.find(
+	{cast:{$in:['Hugo Weaving'], $nin:['Keanu Reeves']}}	
+)
+
+//7
+db.movies.aggregate([
+    {$group: {_id: "null", avgComments: { $avg: "$num_mflix_comments" }}}
+])
+
+//8
+db.movies.aggregate([
+	{$match: { countries:"USA"}},
+	{$group: {_id:null, minDuration: {$min: "$runtime"}, maxDuration: {$max: "$runtime"}}}
+	
+])
+
+//9
+db.movies.aggregate([
+	{$group: {_id: { rated: "$rated", year:"$year"}, total: {$sum:1}}}
+])
+
+//10
+db.movies.aggregate([
+	{$match: {runtime:{$gt:100}}},
+	{$group : { _id: "$year", totalMovies:{$sum:1}, totalComments:{$sum: "$num_mflix_comments"}}}
+])
+
+//11
+db.movies.aggregate([
+	{$match: {"awards.nominations":{$gte:5}}},
+	{$group : {_id: "$year", total :{$sum:1}}},
+	{$match : {total : {$gte:3}}}
+])
+
+//12
+db.movies.aggregate([
+	{$match :{cast : "Keanu Reeves"}},
+	{$unwind:"$genres"},
+	{$group: {_id:"$genres", total :{$sum:1}, titles :{$addToSet:"$title"}}}
+])
+
+//13
+db.movies.aggregate([
+	{$unwind:"$genres"},
+	{$unwind:"$countries"},
+	{$group:{_id:{ genre: "$genres", country:"$countries"}, total:{$sum:1}, titles :{$addToSet:"$title"}}},
+	{$match: { total: {$lt:20}}}
+])
+
+//14
+db.movies.aggregate([
+	{$unwind: "$cast"},
+	{$group: { _id:"$cast", appearences:{$sum:1}}},
+	{$sort:{appearences: -1}},
+	{$limit:1}
+])
+
+//15
+db.comments.aggregate([
+	{$match: {name:"Jon Snow"}},
+	{$lookup: { from:"movies", localField :"movie_id", foreignField :"_id", as :"movie"}},
+	{$unwind : "$movie"},
+	{$project : { _id:0, title:"$movie.title", comment:"$text"}}
+])

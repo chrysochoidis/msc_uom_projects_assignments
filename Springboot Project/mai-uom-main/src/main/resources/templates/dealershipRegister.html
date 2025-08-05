@@ -1,0 +1,109 @@
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<html>
+<head>
+<link th:href="@{/login-reg.css}" rel="stylesheet">
+</head>
+<body>
+
+
+	<div class="header"></div>
+	<div class="main">
+		</br>
+		<h2>Εγγραφή Αντιπροσωπείας</h2>
+		</br>
+		<div class="mainContainer">
+			<div class="form">
+				<table>
+					<tr>
+						<td>Επωνυμία:</td>
+						<td><input type='text' id='name'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=nameError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>ΑΦΜ:</td>
+						<td><input type='number' id='afm'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=afmError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>Ιδιοκτήτης:</td>
+						<td><input type='text' id='owner'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=ownerError style="color: red;"></td>
+					</tr>
+					<tr>
+						<td>Password:</td>
+						<td><input type='password' id='password'></td>
+					</tr>
+					<tr>
+						<td colspan="2" id=passwordError style="color: red;"></td>
+					</tr>
+				</table>
+				</br>
+				<button name='register' onclick="register();">Εγγραφή</button>
+				</br> </br>
+				<div>
+					<p>
+						Είστε εγγεγραμμένος;<a href="/ui/login">Σύνδεση</a>
+					</p>
+				</div>
+				</br>
+			</div>
+		</div>
+	</div>
+	<div class="footer"></div>
+
+	<script>
+		function register() {
+			
+			const errorFields = ["nameError", "ownerError", "afmError", "passwordError"];
+		    errorFields.forEach(field => {
+		        const errorElement = document.getElementById(field);
+		        if (errorElement) {
+		            errorElement.textContent = "";
+		        }
+		    });
+		    
+			var settings = {
+				"url" : "/dealershipRegister",
+				"method" : "POST",
+				"timeout" : 0,
+				"headers" : {
+					"Content-Type" : "application/json"
+				},
+				"data" : JSON.stringify({
+					"name" : document.getElementById("name").value,
+					"owner" : document.getElementById("owner").value,
+					"afm" : document.getElementById("afm").value,
+					"password" : document.getElementById("password").value
+				}),
+			};
+			$.ajax(settings).done(
+				function (response) {
+					sessionStorage.setItem("registrationSuccess",
+							response);
+					window.location.href = "/ui/login";
+				})
+				.fail(function (xhr, status, error) {
+					if(xhr.status === 409) {
+						alert(xhr.responseText);
+					} else {
+						const errors = xhr.responseJSON;
+						for (const [field, message] of Object.entries(errors)) {
+						    const errorElement = document.getElementById(`${field}Error`);
+						    if (errorElement) {
+						        errorElement.textContent = message;
+						    }
+						}
+					}
+				});
+		}
+	</script>
+</body>
+</html>
