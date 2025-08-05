@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mai25067</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="functionality.js" defer></script>
+</head>
+<body>
+    <header><h1>Software Development & Big Data</h1></header>
+    <div id="main">
+        <div id="errorArea" style="display:none">
+            <span id="errors"></span>
+        </div>
+    </br>
+        <div id="inputfileArea">
+            <input type="file" id="fileUpload" />
+        </br></br>
+        <button id="upload" onclick="uploadCSV()">Upload</button>
+        </div>
+        </br>
+        <div id="dataArea">
+            <table id="addRecordTable" style="display:none">
+                <tr>
+                    <th>invoice_no</th>
+                    <th>customer_id</th>
+                    <th>gender</th>
+                    <th>age</th>
+                    <th>category</th>
+                    <th>quantity</th>
+                    <th>price</th>
+                    <th>payment_method</th>
+                    <th>invoice_date</th>
+                    <th>shopping_mall</th>
+                    <th>Actions</th>
+                </tr>
+                <tr id="addRecordRow">
+                    <td> <input type="text"> </td>
+                    <td> <input type="text"> </td>
+                    <td> <input list="genders">
+                        <datalist id = "genders"> 
+                            <option value="Male">
+                            <option value="Female">
+                        </datalist>
+                    </td>
+                    <td> <input type="number"> </td>
+                    <td> <input type="text">  </td>
+                    <td> <input type="number"> </td>
+                    <td> <input type="number"> </td>
+                    <td> <input list="payments"> 
+                        <datalist id = "payments">
+                            <option value="Cash">
+                            <option value="Credit Card">
+                            <option value="Debit Card">
+                        </datalist>   
+                    </td>
+                    <td> <input type="text"> </td>
+                    <td> <input type="text"> </td>
+                    <td> <button id="addRecordButton" onclick="addRecord()">Add</button> </td>
+                </tr>
+            </table>
+            <table id="dataTable" style="display:none">
+                <tr>
+                    <th>invoice_no</th>
+                    <th>customer_id</th>
+                    <th>gender</th>
+                    <th>age</th>
+                    <th>category</th>
+                    <th>quantity</th>
+                    <th>price</th>
+                    <th>payment_method</th>
+                    <th>invoice_date</th>
+                    <th>shopping_mall</th>
+                    <th>Actions</th>
+                </tr>
+            </table> 
+        </div>
+    </div>
+    <footer>University of Macedonia, MSc Applied Informatics, SD101 Software development & Big Data</footer>
+
+</body>
+</html>
